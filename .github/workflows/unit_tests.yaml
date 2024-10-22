@@ -14,6 +14,15 @@ jobs:
           bundler-cache: true
       - name: Run tests
         run: bundle exec rspec --tag unit -f j -o tmp/rspec_results.json -f p
-      - uses: joshmfrankel/simplecov-check-action@main
+      - name: RSpec Report
+        uses: SonicGarden/rspec-report-action@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          json-path: tmp/rspec_results.json
+        if: always()
+      - name: Upload coverage results
+        uses: actions/upload-artifact@master
+        with:
+          name: coverage-report
+          path: coverage
+        if: always()
