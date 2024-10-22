@@ -28,7 +28,7 @@ RSpec.describe TestResultsProcessor, unit: true do
     it 'calculates and adds the pass rate correctly when tests are present' do
       processor = TestResultsProcessor.new(valid_hash)
       result = processor.add_pass_rate
-      expect(result['pass_rate']).to eq(44.0) # (10/20) * 100 = 50.0
+      expect(result['pass_rate']).to eq(50.0) # (10/20) * 100 = 50.0
     end
 
     it 'sets pass rate to 0.0 when no tests are present' do
