@@ -11,7 +11,7 @@ post '/api/test_results' do
   end
 
   # Parse the JSON and handle parsing errors
-  +begin
+  begin
      test_results = JSON.parse(request_body)
    rescue JSON::ParserError
      halt 400, { "error": "Invalid JSON format" }.to_json
