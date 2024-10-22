@@ -20,3 +20,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           json-path: tmp/rspec_results.json
         if: always()
+      - name: Upload coverage results
+        uses: actions/upload-artifact@master
+        with:
+          name: coverage-report
+          path: coverage
+        if: always()
