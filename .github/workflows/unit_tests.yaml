@@ -20,9 +20,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           json-path: tmp/rspec_results.json
         if: always()
-      - name: Upload coverage results
-        uses: actions/upload-artifact@master
+      - name: Simplecov Report
+        uses: aki77/simplecov-report-action@v1
         with:
-          name: coverage-report
-          path: coverage
-        if: always()
+          token: ${{ secrets.GITHUB_TOKEN }}
