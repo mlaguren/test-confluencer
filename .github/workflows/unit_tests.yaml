@@ -1,4 +1,4 @@
-name: Run Unit Tests
+name: Run Test Suite (Unit + Integration)
 on: [push]
 jobs:
   run-rspec-tests:
@@ -13,7 +13,7 @@ jobs:
           # runs 'bundle install' and caches installed gems automatically
           bundler-cache: true
       - name: Run tests
-        run: bundle exec rspec --tag unit -f j -o tmp/rspec_results.json -f p
+        run: bundle exec rspec -f j -o tmp/rspec_results.json -f p
       - name: RSpec Report
         uses: SonicGarden/rspec-report-action@v2
         with:
@@ -23,5 +23,5 @@ jobs:
       - name: Simplecov Report
         uses: aki77/simplecov-report-action@v1
         with:
-          failedThreshold: 70
+          failedThreshold: 90
           token: ${{ secrets.GITHUB_TOKEN }}
