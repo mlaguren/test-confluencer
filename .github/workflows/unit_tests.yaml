@@ -15,13 +15,12 @@ jobs:
       - name: Run tests
         run: bundle exec rspec -f j -o tmp/rspec_results.json -f p
       - name: RSpec Report
-        uses: SonicGarden/rspec-report-action@v2
+        uses: SonicGarden/rspec-report-action@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           json-path: tmp/rspec_results.json
         if: always()
-      - name: Simplecov Report
-        uses: aki77/simplecov-report-action@v1
+      - name: Code Coverage Report
+        uses: k1LoW/octocov-action@v1
         with:
-          failedThreshold: 90
           token: ${{ secrets.GITHUB_TOKEN }}
