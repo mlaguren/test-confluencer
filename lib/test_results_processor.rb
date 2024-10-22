@@ -18,9 +18,12 @@ class TestResultsProcessor
     @test_results
   end
 
-  # Returns the modified JSON string with the pass rate
-  def to_json
-    @test_results.to_json
+  def as_json(options = nil)
+    @test_results
+  end
+
+  def to_json(*args)
+    as_json.to_json(*args)
   end
 
   private

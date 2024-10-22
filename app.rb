@@ -3,7 +3,6 @@ require 'json'
 require_relative 'lib/test_results_processor'
 
 post '/api/test_results' do
-
   request_body = request.body.read.strip
 
   # Return error if the body is empty or contains only whitespace
@@ -12,8 +11,11 @@ post '/api/test_results' do
   end
 
   # Parse the JSON and handle parsing errors
-  test_results = JSON.parse(request_body) rescue halt(400, { "error": "Invalid JSON format" }.to_json)
-
+  +begin
+     test_results = JSON.parse(request_body)
+   rescue JSON::ParserError
+     halt 400, { "error": "Invalid JSON format" }.to_json
+   end
   # Validate required keys
   expected_keys = ["project", "pass", "fail", "skipped"]
   missing_keys = expected_keys - test_results.keys
@@ -26,5 +28,4 @@ post '/api/test_results' do
   # Process results and return with 201 status
   pass_fail_results = TestResultsProcessor.new(test_results)
   halt 201, pass_fail_results.add_pass_rate.to_json
-
 end

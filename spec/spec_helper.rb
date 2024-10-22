@@ -9,7 +9,7 @@ SimpleCov.start do
   add_filter "/spec/"       # Exclude the 'spec' directory from coverage results
 end
 
-require File.expand_path '../../app.rb', __FILE__  # Adjust to the path of your main app file
+require File.expand_path '../app.rb', __dir__  # Adjust to the path of your main app file
 
 RSpec.configure do |config|
   config.include Rack::Test::Methods  # Include rack-test for Sinatra integration tests
