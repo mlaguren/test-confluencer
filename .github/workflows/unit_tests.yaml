@@ -20,7 +20,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           json-path: tmp/rspec_results.json
         if: always()
-      - name: Code Coverage Report
-        uses: k1LoW/octocov-action@v1
+      - name: Simplecov Report
+        uses: aki77/simplecov-report-action@v1
         with:
+          failedThreshold: 90
           token: ${{ secrets.GITHUB_TOKEN }}
