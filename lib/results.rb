@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require_relative 'confluence_table'
 
 module Results
@@ -32,14 +31,13 @@ module Results
   end
 
   def self.extract_project_results(table, project)
-    row = table.at_xpath("//tr[td/p[text()='#{project}']]")
+    row = table.at_xpath("//tr[td[text()='#{project}'] or td/p[text()='#{project}']]")
     return {}.to_json unless row
-
     {
-      pass: row.at_css('td:nth-child(2) p').text,
-      fail: row.at_css('td:nth-child(3) p').text,
-      skipped: row.at_css('td:nth-child(4) p').text,
-      pass_rate: row.at_css('td:nth-child(5) p').text
+      pass: row.at_css('td:nth-child(2)').text,
+      fail: row.at_css('td:nth-child(3)').text,
+      skipped: row.at_css('td:nth-child(4)').text,
+      pass_rate: row.at_css('td:nth-child(5)').text
     }.to_json
   end
 end

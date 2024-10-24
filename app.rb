@@ -5,6 +5,7 @@ require_relative 'lib/test_results_processor'
 require_relative 'lib/results'
 
 get '/api/test_results' do
+  status 200
   return Results.get_results(params['project'])
 end
 

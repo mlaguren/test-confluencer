@@ -34,7 +34,7 @@ RSpec.describe Results do
       end
     end
 
-=begin
+
     context 'when project is provided and exists' do
       it 'returns the results for the specified project' do
         result = JSON.parse(Results.get_results('Suite 1'))
@@ -45,7 +45,7 @@ RSpec.describe Results do
         expect(result['pass_rate']).to eq('83%')
       end
     end
-=end
+
 
     context 'when project is provided but does not exist' do
       it 'returns an empty result' do
