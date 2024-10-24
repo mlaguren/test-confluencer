@@ -7,7 +7,6 @@ require 'nokogiri'
 
 class ConfluenceTable
   BASE_URL = "#{ENV['CONFLUENCE_URL']}/wiki/api/v2/pages/"
-  puts BASE_URL
 
   def initialize(page_id, api_token, username)
     @page_id = page_id
