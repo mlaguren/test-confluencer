@@ -17,6 +17,7 @@ class ConfluenceTable
 
   def fetch_page
     url = URI("#{BASE_URL}#{@page_id}?body-format=storage")
+    puts url
     request = Net::HTTP::Get.new(url)
     request["Authorization"] = @auth_header
     response = send_request(url, request)
