@@ -40,4 +40,19 @@ RSpec.describe 'TestResults API', type: :request, integration: true do
       end
     end
   end
+
+  describe 'GET /api/test_results' do
+    context 'all projects' do
+      it 'returns a 200 status with an error message' do
+        get '/api/test_results', '', { 'CONTENT_TYPE' => 'application/json' }
+        expect(last_response.status).to eq(200)
+      end
+    end
+    context 'a projects' do
+      it 'returns a 200 status with an error message' do
+        get '/api/test_results?project=API', '', { 'CONTENT_TYPE' => 'application/json' }
+        expect(last_response.status).to eq(200)
+      end
+    end
+  end
 end
