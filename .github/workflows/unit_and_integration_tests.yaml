@@ -1,7 +1,7 @@
 name: Run Test Suite (Unit + Integration)
 on: [push]
 env:
-  CONFLUENCE_URL: ${{ vars.CONF_URL }}
+  CONFLUENCE_URL: ${{ vars.CONF_URL || 'https://gazelle.atlassian.net' }}
 jobs:
   run-rspec-tests:
     runs-on: ubuntu-latest
