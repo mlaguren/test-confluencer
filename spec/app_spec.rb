@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe 'TestResults API', type: :request, integration: true do
   describe 'POST /api/test_results' do
     context 'when the payload is valid' do
-      let(:valid_payload) { { project: 'test_project', pass: 10, fail: 5, skipped: 5 }.to_json }
+      let(:valid_payload) { { project: 'API', pass: 10, fail: 5, skipped: 5 }.to_json }
 
       it 'returns a 201 status' do
         post '/api/test_results', valid_payload, { 'CONTENT_TYPE' => 'application/json' }

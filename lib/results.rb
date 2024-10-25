@@ -13,6 +13,11 @@ module Results
     extract_all_suites(table).to_json
   end
 
+  def self.update_results(results)
+    pass_rate_page = ConfluenceTable.new(ENV['PAGE'], ENV['ATLASSIAN_TOKEN'], "melvin.laguren@ecoatm.com")
+    pass_rate_page.update_table(results['project'],results['pass'], results['fail'], results['skipped'], results['pass_rate'])
+  end
+
   private
 
   def self.extract_all_suites(table)

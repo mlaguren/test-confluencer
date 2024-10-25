@@ -5,7 +5,7 @@ gem 'nokogiri'
 gem 'sinatra'
 gem 'sinatra-contrib'
 
-
+gem 'allure-rspec', '~> 2.23.0'
 gem 'rspec', require:false, group: :test
 gem "rackup", "~> 2.1"
 gem 'rack-test', require: false, group: :test

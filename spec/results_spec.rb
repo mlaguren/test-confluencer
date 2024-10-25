@@ -38,7 +38,6 @@ RSpec.describe Results do
     context 'when project is provided and exists' do
       it 'returns the results for the specified project' do
         result = JSON.parse(Results.get_results('Suite 1'))
-        pp result
         expect(result).to be_a(Hash)
         expect(result['pass']).to eq('5')
         expect(result['fail']).to eq('2')

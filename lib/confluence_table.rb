@@ -7,7 +7,6 @@ require 'nokogiri'
 
 class ConfluenceTable
   BASE_URL = "#{ENV['CONFLUENCE_URL']}/wiki/api/v2/pages/"
-  puts BASE_URL
 
   def initialize(page_id, api_token, username)
     @page_id = page_id
@@ -18,27 +17,24 @@ class ConfluenceTable
 
   def fetch_page
     url = URI("#{BASE_URL}#{@page_id}?body-format=storage")
-    puts url
     request = Net::HTTP::Get.new(url)
     request["Authorization"] = @auth_header
     response = send_request(url, request)
     json = response.body
   end
 
-  def update_table(project_key, column_2, column_3, column_4)
-    page_json = fetch_page
+  def update_table(project, pass, fail, skipped, pass_rate)
+    page_json = JSON.parse fetch_page
     current_version = page_json['version']['number']
-
     document = Nokogiri::HTML(page_json['body']['storage']['value'])
     table = document.at('table')
+    row = table.xpath("//tr[td/p[text()='#{project}']]")
+    row.at_css('td:nth-child(2) p').content = pass.to_s
+    row.at_css('td:nth-child(3) p').content = fail.to_s
+    row.at_css('td:nth-child(4) p').content = skipped.to_s
+    row.at_css('td:nth-child(5) p').content = "#{pass_rate.to_s}%"
 
-    row = table.xpath('//tr[td/p[text()="API"]]')
-    row.at_css('td:nth-child(2) p').content = project_key.to_s
-    row.at_css('td:nth-child(3) p').content = column_2.to_s
-    row.at_css('td:nth-child(4) p').content = column_3.to_s
-    row.at_css('td:nth-child(5) p').content = column_4.to_s
-
-    update_page(page_json['title'], document, current_version + 1)
+    update_page(page_json['title'], document, current_version + 1, project)
   end
 
   private
@@ -49,7 +45,7 @@ class ConfluenceTable
     https.request(request)
   end
 
-  def update_page(title, updated_document, new_version)
+  def update_page(title, updated_document, new_version, project)
     url = URI("#{BASE_URL}#{@page_id}")
     request = Net::HTTP::Put.new(url)
     request["Content-Type"] = "application/json"
@@ -66,10 +62,9 @@ class ConfluenceTable
       },
       version: {
         number: new_version,
-        message: "API Test"
+        message: "Updated Test Results from #{project} regression"
       }
     }
-
     request.body = body.to_json
     response = send_request(url, request)
     response.body

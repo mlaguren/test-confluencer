@@ -34,7 +34,7 @@ post '/api/test_results' do
 
   # Process results and return with 201 status
 
-
   pass_fail_results = TestResultsProcessor.new(test_results)
+  Results.update_results(pass_fail_results.add_pass_rate)
   halt 201, pass_fail_results.add_pass_rate.to_json
 end
