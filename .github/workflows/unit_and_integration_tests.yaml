@@ -2,7 +2,7 @@ name: Run Test Suite (Unit + Integration)
 on: [push]
 env:
   CONFLUENCE_URL: ${{ vars.CONF_URL }}
-  ATLASSIAN_TOKEN: ${{ vars.ATLASSIAN_TOKEN }}
+  ATLASSIAN_TOKEN: ${{ secrets.ATLASSIAN_TOKEN }}
   PAGE: ${{ vars.PAGE }}
 jobs:
   run-rspec-tests:

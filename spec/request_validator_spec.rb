@@ -4,52 +4,58 @@ require_relative '../lib/request_validator'
 RSpec.describe RequestValidator do
   let(:expected_keys) { ["project", "pass", "fail", "skipped"] }
 
-  describe '.validate_payload' do
-    context 'when the payload is empty' do
-      it 'returns an error for empty payload' do
-        valid, result = RequestValidator.validate_test_results_payload('', expected_keys)
-        expect(valid).to eq(false)
-        expect(result[:error]).to eq("No Payload")
+  describe '.validate_test_results_payload' do
+    context 'when request body is nil' do
+      it 'returns an error about empty request body' do
+        result = RequestValidator.validate_test_results_payload(nil, expected_keys)
+        expect(result).to eq([false, { "error": "Request body cannot be empty" }])
       end
     end
 
-    context 'when the payload is invalid JSON' do
-      it 'returns an error for invalid JSON' do
-        invalid_json = '{invalid: "json"}'
-        valid, result = RequestValidator.validate_test_results_payload(invalid_json, expected_keys)
-        expect(valid).to eq(false)
-        expect(result[:error]).to eq("Invalid JSON format")
+    context 'when request body is empty string' do
+      it 'returns an error about empty request body' do
+        result = RequestValidator.validate_test_results_payload('', expected_keys)
+        expect(result).to eq([false, { "error": "Request body cannot be empty" }])
       end
     end
 
-    context 'when required keys are missing' do
-      it 'returns an error with missing keys' do
-        payload = { "project" => "Test Project", "pass" => "10" }.to_json
-        valid, result = RequestValidator.validate_test_results_payload(payload, expected_keys)
-        expect(valid).to eq(false)
-        expect(result[:error]).to eq("Invalid request payload")
-        expect(result[:missing_keys]).to contain_exactly("fail", "skipped")
-        expect(result[:extra_keys]).to be_empty
+    context 'when request body contains invalid JSON' do
+      it 'returns an error about invalid JSON format' do
+        result = RequestValidator.validate_test_results_payload('invalid-json', expected_keys)
+        expect(result[0]).to be(false)
+        expect(result[1][:error]).to eq("Invalid JSON format")
       end
     end
 
-    context 'when there are extra keys' do
-      it 'returns an error with extra keys' do
-        payload = { "project" => "Test Project", "pass" => "10", "fail" => "2", "skipped" => "1", "extra_key" => "value" }.to_json
-        valid, result = RequestValidator.validate_test_results_payload(payload, expected_keys)
-        expect(valid).to eq(false)
-        expect(result[:error]).to eq("Invalid request payload")
-        expect(result[:missing_keys]).to be_empty
-        expect(result[:extra_keys]).to contain_exactly("extra_key")
+    context 'when request body is valid JSON but has missing keys' do
+      it 'returns an error about missing keys' do
+        request_body = { "project" => "MyProject", "pass" => "10" }.to_json
+        result = RequestValidator.validate_test_results_payload(request_body, expected_keys)
+        expect(result).to eq([false, { "error": "Invalid request payload", "missing_keys": ["fail", "skipped"], "extra_keys": [] }])
       end
     end
 
-    context 'when the payload is valid' do
-      it 'returns true and parsed JSON when valid' do
-        valid_payload = { "project" => "Test Project", "pass" => "10", "fail" => "2", "skipped" => "1" }.to_json
-        valid, result = RequestValidator.validate_test_results_payload(valid_payload, expected_keys)
-        expect(valid).to eq(true)
-        expect(result).to eq(JSON.parse(valid_payload))
+    context 'when request body is valid JSON but has extra keys' do
+      it 'returns an error about extra keys' do
+        request_body = { "project" => "MyProject", "pass" => "10", "fail" => "2", "skipped" => "1", "extra" => "extra_value" }.to_json
+        result = RequestValidator.validate_test_results_payload(request_body, expected_keys)
+        expect(result).to eq([false, { "error": "Invalid request payload", "missing_keys": [], "extra_keys": ["extra"] }])
+      end
+    end
+
+    context 'when request body is valid JSON with correct keys' do
+      it 'returns true and parsed JSON' do
+        request_body = { "project" => "MyProject", "pass" => "10", "fail" => "2", "skipped" => "1" }.to_json
+        result = RequestValidator.validate_test_results_payload(request_body, expected_keys)
+        expect(result).to eq([true, { "project" => "MyProject", "pass" => "10", "fail" => "2", "skipped" => "1" }])
+      end
+    end
+
+    context 'when a standard error occurs during parsing' do
+      it 'handles the standard error' do
+        allow(JSON).to receive(:parse).and_raise(StandardError, "Something went wrong")
+        result = RequestValidator.validate_test_results_payload('{ "project": "Test" }', expected_keys)
+        expect(result).to eq([false, { "error": "Error processing JSON", "details": "Something went wrong" }])
       end
     end
   end

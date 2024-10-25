@@ -2,14 +2,16 @@
 
 module RequestValidator
   def self.validate_test_results_payload(request_body, expected_keys)
-    if request_body.strip.empty?
-      return [false, { "error": "No Payload" }]
+    if request_body.nil? || request_body.strip.empty?
+      return [false, { "error": "Request body cannot be empty" }]
     end
 
     begin
       parsed_json = JSON.parse(request_body)
-    rescue JSON::ParserError
-      return [false, { "error": "Invalid JSON format" }]
+      rescue JSON::ParserError => e
+        return [false, { "error": "Invalid JSON format", "details": e.message }]
+      rescue StandardError => e
+        return [false, { "error": "Error processing JSON", "details": e.message }]
     end
 
     missing_keys = expected_keys - parsed_json.keys
