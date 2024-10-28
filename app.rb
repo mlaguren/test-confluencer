@@ -1,11 +1,12 @@
+if ENV['RACK_ENV'] != 'production'
+  require 'dotenv/load'
+  end
+
 require 'sinatra'
 require 'json'
 require_relative 'lib/test_results_processor'
 require_relative 'lib/results'
 
-if ENV['RACK_ENV'] != 'production'
-  require 'dotenv/load'
-end
 get '/api/test_results' do
   status 200
   return Results.get_results(params['project'])
