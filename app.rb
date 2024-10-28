@@ -1,7 +1,6 @@
-if ENV['RACK_ENV'] != 'production'
+if !ENV['RACK_ENV'] || ENV['RACK_ENV'] != 'production'
   require 'dotenv/load'
-  end
-
+end
 require 'sinatra'
 require 'json'
 require_relative 'lib/test_results_processor'
