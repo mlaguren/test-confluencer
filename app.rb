@@ -1,6 +1,13 @@
 require 'sinatra'
 require 'json'
+require 'dotenv/load'
 require_relative 'lib/test_results_processor'
+require_relative 'lib/results'
+
+get '/api/test_results' do
+  status 200
+  return Results.get_results(params['project'])
+end
 
 post '/api/test_results' do
   request_body = request.body.read.strip
@@ -26,6 +33,8 @@ post '/api/test_results' do
   end
 
   # Process results and return with 201 status
+
   pass_fail_results = TestResultsProcessor.new(test_results)
+  Results.update_results(pass_fail_results.add_pass_rate)
   halt 201, pass_fail_results.add_pass_rate.to_json
 end

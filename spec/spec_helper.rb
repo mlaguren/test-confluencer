@@ -2,6 +2,7 @@ ENV['RACK_ENV'] = 'test'
 require 'simplecov'
 require 'rack/test'
 require 'rspec'
+require "allure-rspec"
 
 # Start SimpleCov and configure it
 SimpleCov.start do

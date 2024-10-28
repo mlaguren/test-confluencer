@@ -39,8 +39,3 @@ class TestResultsProcessor
     end
   end
 end
-
-# Example usage:
-json_input = '{"pass": 80, "fail": 15, "skipped": 5}'
-processor = TestResultsProcessor.new(json_input)
-puts processor.add_pass_rate.to_json
