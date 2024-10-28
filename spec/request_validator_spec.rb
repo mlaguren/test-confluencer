@@ -2,7 +2,7 @@ require 'rspec'
 require_relative '../lib/request_validator'
 
 RSpec.describe RequestValidator do
-  let(:expected_keys) { ["project", "pass", "fail", "skipped"] }
+  let(:expected_keys) { RequestValidator::REQUIRED_KEYS }
 
   describe '.validate_test_results_payload' do
     context 'when request body is nil' do

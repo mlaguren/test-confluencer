@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module RequestValidator
+  REQUIRED_KEYS = ["project", "pass", "fail", "skipped"].freeze
   def self.validate_test_results_payload(request_body, expected_keys)
     if request_body.nil? || request_body.strip.empty?
       return [false, { "error": "Request body cannot be empty" }]

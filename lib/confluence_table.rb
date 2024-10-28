@@ -20,7 +20,10 @@ class ConfluenceTable
     request = Net::HTTP::Get.new(url)
     request["Authorization"] = @auth_header
     response = send_request(url, request)
-    json = response.body
+    unless response.is_a?(Net::HTTPSuccess)
+      raise "Failed to fetch page: #{response.code} - #{response.message}"
+    end
+    response.body
   end
 
   def update_table(project, pass, fail, skipped, pass_rate)
@@ -67,6 +70,9 @@ class ConfluenceTable
     }
     request.body = body.to_json
     response = send_request(url, request)
-    response.body
+    unless response.is_a?(Net::HTTPSuccess)
+      raise "Failed to update page: #{response.code} - #{response.message}"
+    end
+    JSON.parse(response.body)
   end
 end
