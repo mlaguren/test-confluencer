@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 gem 'base64'
 gem 'nokogiri'
-gem 'sinatra'
-gem 'sinatra-contrib'
+gem 'sinatra', '>= 4.1.0'
+gem 'sinatra-contrib', '>= 4.1.0'
 
 gem 'allure-rspec', '~> 2.23.0', group: :test
 gem 'rspec', require:false, group: :test
